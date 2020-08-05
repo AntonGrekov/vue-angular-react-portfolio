@@ -1,77 +1,148 @@
 <template>
-    <v-app>
+   <v-app>
       <v-card
-          width="800"
-          class="mx-auto mt-150"
-          @mouseenter="isHovered = !isHovered"
-          @mouseleave="isHovered = !isHovered"
+        @mouseenter="isHovered = true"
+        @mouseleave="isHovered = false"
+        elevation="4"
+        width="800"
+        class="mx-auto"
+        :dark="isDarkTheme"
       >
-        <v-container>
-          <h3
-              class="v-card__h3"
-              :class="{'hovered': isHovered}"
-          >
-            <span>Add/Edit/Delete Employee Form</span>
-          </h3>
-          <v-row>
-            <v-col class="col-sm-5">
-              <ListEmployee
-                  :eList="employeesList" @selectEmployee="selectEmployee"/>
-            </v-col>
-            <v-col>
-              <FormAddEmployee
-                  :lastId="lastId"
-                  :emp="selected"
-                  :editing="editing"
-                  :formTitle="formTitle"
-                  @saveNewEmployee="saveNewEmployee"
-                  @clearForm="clearForm"
-                  @updateEmployee="updateEmployee"
-                  @removeEmployee="removeEmployee"
-              />
-            </v-col>
-          </v-row>
-        </v-container>
+         <v-container>
+            <h3 class="v-card__h3" :class="{'hovered': isHovered}">
+               <span>Add/Edit/Delete Employee Form </span>
+            </h3>
+            <v-row>
+               <v-col class="col-sm-5">
+                  <ListEmployee
+                    :eList="employeesList"
+                    :dark="isDarkTheme"
+                    @selectEmployee="selectEmployee"
+                  />
+               </v-col>
+               <v-col>
+                  <FormEmployee
+                    :lastId="lastId"
+                    :emp="selected"
+                    :editing="editing"
+                    :formTitle="formTitle"
+                    @saveNewEmployee="saveNewEmployee"
+                    @clearForm="clearForm"
+                    @updateEmployee="updateEmployee"
+                    @removeEmployee="removeEmployee"
+                  />
+               </v-col>
+            </v-row>
+            <v-row class="align-center">
+               <v-overlay
+                 absolute="absolute"
+                 :opacity="1"
+                 :value="overlay"
+                 :z-index="5"
+               >
+                  <v-subheader>adadsdsa</v-subheader>
+                  <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Culpa neque quas ratione temporibus
+                     ullam! Ducimus harum maiores odio perspiciatis repellendus.</p>
+                  <v-btn
+                    color="primary"
+                    @click="overlay = false"
+                  >
+                     Закрыть
+                  </v-btn>
+               </v-overlay>
+               <v-btn
+                 class="ml-2 float-left"
+                 color="accent"
+                 outlined
+                 @click="overlay = !overlay"
+               >
+                  Описание
+               </v-btn>
+               <v-btn
+                 outlined
+                 color="accent"
+                 class="ml-2"
+                 href="https://bitbucket.org/AntonGrekov/employees-list-nots/commits/"
+                 target="_blank">
+                  GIT
+               </v-btn>
+               <v-switch
+                 :label="`Theme: ${switch1.toString()}`"
+                 v-model="switch1"
+                 class="float-right d-inline-flex ml-3"
+                 true-value="Dark"
+                 false-value="Light"
+                 color="orange"
+                 inset>
+               </v-switch>
+            </v-row>
+         </v-container>
       </v-card>
 
       <v-card
-          width="800"
-          class="mx-auto mt-12"
-          @mouseenter="isHovered = !isHovered"
-          @mouseleave="isHovered = !isHovered"
+        width="800"
+        class="mx-auto mt-12"
+        @mouseenter="isHovered = !isHovered"
+        @mouseleave="isHovered = !isHovered"
       >
-        <v-container>
-          <h3
-              class="v-card__h3"
-              :class="{'hovered': isHovered}"
-          >
-            <span>Simple Todo</span>
-          </h3>
-          <v-row>
-            <v-col>
-              <SimpleTodo/>
-            </v-col>
-          </v-row>
-        </v-container>
+         <v-container>
+            <h3 class="v-card__h3 v-card__h3--black" :class="{'hovered': isHovered}">
+               <span>Simple Todo</span>
+            </h3>
+            <v-row>
+               <v-col>
+                  <SimpleTodo/>
+               </v-col>
+            </v-row>
+            <v-row>
+               <v-overlay
+                 absolute="absolute"
+                 :opacity="1"
+                 :value="overlay2"
+                 :z-index="5"
+               >
+                  <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Culpa neque quas ratione temporibus
+                     ullam! Ducimus harum maiores odio perspiciatis repellendus.</p>
+                  <v-btn
+                    color="primary"
+                    @click="overlay2 = false"
+
+                  >
+                     Закрыть
+                  </v-btn>
+               </v-overlay>
+               <v-btn
+                 @click="overlay2 = !overlay2"
+                 class="ml-2 float-left"
+                 color="accent"
+                 outlined
+               >
+                  Описание
+               </v-btn>
+            </v-row>
+         </v-container>
       </v-card>
-    </v-app>
+   </v-app>
 </template>
 
 
 <script>
   import ListEmployee from "./components/ListEmployee.vue";
-  import FormAddEmployee from "./components/FormAddEmployee";
+  import FormEmployee from "./components/FormEmployee";
   import SimpleTodo from "./components/SimpleTodo.vue";
 
   export default {
     components: {
-      FormAddEmployee,
+      FormEmployee,
       ListEmployee,
       SimpleTodo,
     },
     data() {
       return {
         isHovered: false,
+        overlay: false,
+        overlay2: false,
+        switch1: "Light",
         activeClass: "active",
         errorClass: "text-danger",
         employeesList: [
@@ -135,7 +206,14 @@
         localStorage.setItem("employeesList", JSON.stringify(this.employeesList));
       },
     },
-
+    computed: {
+      isDarkTheme() {
+        return this.switch1 === "Dark";
+      },
+      isLightTheme() {
+        return this.switch1 === "Light";
+      }
+    },
     mounted() {
       // Update ID of last employee on root component mount
       this.lastId = this.employeesList.slice(-1)[0].id;
@@ -147,7 +225,6 @@
         this.employeesList = clientDataParsed;
       }
     },
-
     methods: {
       saveNewEmployee(emp) {
         this.employeesList.push(emp);
@@ -187,54 +264,67 @@
 </script>
 
 <style lang="scss">
-  #app {
-    font-family: Avenir, Helvetica, Arial, sans-serif;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    text-align: center;
-    color: #2c3e50;
-    margin-top: 60px;
-  }
+   #app {
+      font-family: Avenir, Helvetica, Arial, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-align: center;
+      color: #2c3e50;
+      margin-top: 60px;
+   }
 
-  .v-card__h3 {
-    color: #000;
-    padding: 0.5rem;
-    position: relative;
-    background: rgb(146, 141, 222);
-    background: linear-gradient(
-            348deg,
-            rgba(146, 141, 222, 1) 0%,
-            rgba(83, 83, 203, 0.7682423311121324) 54%,
-            rgba(0, 212, 255, 1) 100%
-    );
-    box-shadow: 0px 5px 5px 0px #000000d9;
-    transition: 1s;
-    cursor: pointer;
-
-    span {
+   .v-card__h3 {
+      color: #000;
+      padding: 0.5rem;
       position: relative;
-      z-index: 5;
-    }
-
-    &:after {
-      content: "";
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      opacity: 0;
-      top: 0;
-      left: 0;
-      transition: 1s;
+      background: rgb(146, 141, 222);
       background: linear-gradient(
-              348deg,
-              rgba(0, 212, 255, 1) 0%,
-              rgb(255, 245, 238) 54%,
-              rgba(146, 141, 222, 1) 100%
+          348deg,
+          rgba(0, 212, 255, 1) 0%,
+          rgb(255, 245, 238) 54%,
+          rgba(146, 141, 222, 1) 100%
       );
-    }
+      transition: 0.25s;
+      cursor: pointer;
 
-    &.hovered:after {
-      opacity: 1;
-    }
-  }
+      span {
+         position: relative;
+         z-index: 2;
+      }
+
+      &:after {
+         content: "";
+         position: absolute;
+         width: 100%;
+         height: 100%;
+         opacity: 0;
+         top: 0;
+         left: 0;
+         transition: 1.3s;
+         background: linear-gradient(
+             348deg,
+             rgba(146, 141, 222, 1) 0%,
+             rgba(83, 83, 203, 0.7682423311121324) 54%,
+             rgba(0, 212, 255, 1) 100%
+         );
+      }
+
+      &.hovered:after {
+         opacity: 1;
+      }
+
+      &.hovered {
+         box-shadow: 0px 5px 5px 0px #00000054;
+      }
+
+      &--black {
+         background: #000;
+         color: #fff;
+
+         &:after {
+            background: #626f6f;
+            color: #000;
+         }
+      }
+   }
 </style>
