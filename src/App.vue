@@ -1,18 +1,23 @@
 <template>
   <div id="app">
-    <EmployeeForm></EmployeeForm>
+    <v-app>
+      <EmployeeForm></EmployeeForm>
+      <SimpleTodo></SimpleTodo>
+    </v-app>
   </div>
 </template>
 
 <script>
-import EmployeeForm from './apps/NewEmployeeApp/mainApp.vue'
+import EmployeeForm from "./apps/NewEmployeeApp/index.vue";
+import SimpleTodo from "./apps/SimpleTodo/index.vue";
 
 export default {
-  name: 'App',
+  name: "App",
   components: {
-    EmployeeForm
-  }
-}
+    EmployeeForm,
+    SimpleTodo,
+  },
+};
 </script>
 
 <style>
