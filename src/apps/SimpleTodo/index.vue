@@ -3,8 +3,7 @@
     width="800" 
     class="mx-auto mt-12"
     @mouseenter="isHovered = true"
-    @mouseleave="isHovered = false"
-  >
+    @mouseleave="isHovered = false">
     <v-container>
       <h3 class="v-card__h3 v-card__h3--black" :class="{'hovered': isHovered}">
         <span>Simple Todo</span>
@@ -19,8 +18,7 @@
           :value="overlay"
           absolute="absolute"
           opacity="1"
-          z-index="5"
-        >
+          z-index="5">
           <p>
             Lorem ipsum dolor sit amet, consectetur adipisicing elit. Culpa neque quas ratione temporibus
             ullam! Ducimus harum maiores odio perspiciatis repellendus.
